@@ -2,15 +2,14 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Productivity Upgrade Calculator</title>
+        <title>Calculator</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>
             * {
                 box-sizing: border-box;
                 margin: 0;
                 padding: 0;
-                font-family: system-ui, -apple-system, BlinkMacSystemFont,
-                    'Segoe UI', sans-serif;
+                font-family: system-ui, sans-serif;
             }
 
             body {
@@ -18,170 +17,96 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: radial-gradient(
-                    circle at top,
-                    #3b82f6 0,
-                    #020617 50%,
-                    #000 100%
-                );
-                color: #e5e7eb;
+                background: #10131a;
+                color: #e0e6f0;
             }
 
+            /* Bigger size */
             .calc-wrapper {
-                background: rgba(15, 23, 42, 0.96);
-                border-radius: 18px;
-                padding: 18px;
-                box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7),
-                    0 0 0 1px rgba(148, 163, 184, 0.15);
-                width: 320px;
-                max-width: 100%;
-                backdrop-filter: blur(18px);
+                background: #1a1f29;
+                padding: 30px;
+                border-radius: 22px;
+                width: 380px;
+                box-shadow: 0 0 35px rgba(0, 0, 0, 0.55);
             }
 
             .calc-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
             }
 
             .calc-title {
-                font-size: 14px;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: #9ca3af;
-            }
-
-            .chip {
-                font-size: 11px;
-                padding: 2px 8px;
-                border-radius: 999px;
-                background: rgba(55, 65, 81, 0.85);
-                color: #e5e7eb;
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-            }
-
-            .chip-dot {
-                width: 6px;
-                height: 6px;
-                border-radius: 999px;
-                background: #22c55e;
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                color: #8fa3c6;
             }
 
             .display {
-                background: linear-gradient(145deg, #020617, #020617);
-                border-radius: 14px;
-                padding: 10px 10px 12px;
-                margin-bottom: 12px;
-                box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
-                overflow: hidden;
+                background: #0e1218;
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 18px;
+                box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
             }
 
             .display-expression {
-                min-height: 20px;
-                font-size: 13px;
-                color: #6b7280;
+                min-height: 22px;
+                font-size: 15px;
+                color: #6d7a8f;
                 text-align: right;
                 word-wrap: break-word;
             }
 
             .display-value {
-                margin-top: 4px;
-                font-size: 30px;
-                font-weight: 500;
+                margin-top: 6px;
+                font-size: 40px;
+                font-weight: 600;
                 text-align: right;
-                color: #f9fafb;
-                word-wrap: break-word;
-            }
-
-            .display-footer {
-                margin-top: 4px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 10px;
-                color: #6b7280;
-            }
-
-            .kbd {
-                border-radius: 4px;
-                border: 1px solid rgba(75, 85, 99, 0.8);
-                padding: 1px 4px;
-                font-size: 10px;
-                font-family: inherit;
-                background: rgba(15, 23, 42, 0.9);
+                color: #ffffff;
             }
 
             .grid {
                 display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 8px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
             }
 
             button {
                 border: none;
-                border-radius: 13px;
-                padding: 13px 0;
-                font-size: 16px;
-                font-weight: 500;
+                padding: 20px 0;
+                font-size: 20px;
+                border-radius: 14px;
                 cursor: pointer;
-                transition: transform 0.05s ease-out, box-shadow 0.05s ease-out,
-                    background 0.1s ease-out;
-                background: #0f172a;
-                color: #e5e7eb;
-                box-shadow: 0 3px 0 rgba(15, 23, 42, 0.9),
-                    0 0 0 1px rgba(31, 41, 55, 0.8);
+                background: #222833;
+                color: #e5e9ef;
+                transition: 0.08s ease;
+                box-shadow: 0 4px 0 #151920;
             }
 
             button:active {
-                transform: translateY(1px);
-                box-shadow: 0 1px 0 rgba(15, 23, 42, 0.9),
-                    0 0 0 1px rgba(31, 41, 55, 0.8);
-            }
-
-            button:focus-visible {
-                outline: 2px solid #3b82f6;
-                outline-offset: 2px;
+                transform: translateY(2px);
+                box-shadow: 0 2px 0 #151920;
             }
 
             .btn-operator {
-                background: radial-gradient(
-                    circle at top left,
-                    #4b5563,
-                    #111827
-                );
-                color: #facc15;
-            }
-
-            .btn-equals {
-                background: radial-gradient(
-                    circle at top left,
-                    #3b82f6,
-                    #1d4ed8
-                );
-                color: #f9fafb;
-                grid-column: span 2;
+                background: #2f3a52;
+                color: #65b4ff;
             }
 
             .btn-ac {
-                background: radial-gradient(
-                    circle at top left,
-                    #ef4444,
-                    #b91c1c
-                );
-                color: #fef2f2;
+                background: #4b2b2b;
+                color: #ffb3b3;
             }
 
             .btn-func {
-                background: radial-gradient(
-                    circle at top left,
-                    #6b7280,
-                    #020617
-                );
-                color: #e5e7eb;
+                background: #2a2f3a;
+                color: #9eb7d6;
+            }
+
+            .btn-equals {
+                background: #1f5eff;
+                color: white;
+                grid-column: span 2;
             }
 
             .btn-zero {
@@ -189,99 +114,51 @@
             }
 
             .history {
-                margin-top: 12px;
-                border-top: 1px solid rgba(55, 65, 81, 0.8);
-                padding-top: 8px;
-                max-height: 90px;
+                margin-top: 18px;
+                border-top: 1px solid #2b3240;
+                padding-top: 10px;
+                max-height: 120px;
                 overflow-y: auto;
-                font-size: 11px;
-                color: #9ca3af;
+                font-size: 13px;
+                color: #9aa8c0;
             }
 
             .history-header {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
-                margin-bottom: 4px;
-            }
-
-            .history-list {
-                list-style: none;
+                margin-bottom: 5px;
             }
 
             .history-item {
+                padding: 4px 0;
                 display: flex;
                 justify-content: space-between;
-                gap: 6px;
-                padding: 2px 0;
                 cursor: pointer;
             }
 
             .history-item:hover {
-                color: #e5e7eb;
-            }
-
-            .history-exp {
-                opacity: 0.8;
-            }
-
-            .history-res {
-                font-weight: 500;
-            }
-
-            .history-empty {
-                font-style: italic;
-                opacity: 0.7;
+                color: #dce3f1;
             }
 
             .history-clear {
                 background: none;
-                border-radius: 999px;
-                box-shadow: none;
+                color: #8091a9;
                 border: none;
-                padding: 0;
-                font-size: 10px;
-                color: #9ca3af;
+                font-size: 12px;
                 cursor: pointer;
-            }
-
-            .history-clear:hover {
-                text-decoration: underline;
-                transform: none;
-                box-shadow: none;
-            }
-
-            @media (max-width: 360px) {
-                .calc-wrapper {
-                    width: 100%;
-                    margin: 10px;
-                }
-                .display-value {
-                    font-size: 26px;
-                }
             }
         </style>
     </head>
+
     <body>
         <div class="calc-wrapper" id="calculator">
             <div class="calc-header">
                 <div class="calc-title">CALCULATOR</div>
-                <div class="chip">
-                    <span class="chip-dot"></span>
-                    <span>Productivity upgrade</span>
-                </div>
             </div>
 
             <div class="display">
                 <div class="display-expression" id="expression"></div>
                 <div class="display-value" id="result">0</div>
-                <div class="display-footer">
-                    <span>Keyboard friendly</span>
-                    <span>
-                        <span class="kbd">Enter</span> =
-                        <span class="kbd">Esc</span> AC
-                    </span>
-                </div>
             </div>
 
             <div class="grid">
@@ -317,7 +194,7 @@
                         Clear
                     </button>
                 </div>
-                <ul class="history-list" id="historyList">
+                <ul id="historyList">
                     <li class="history-empty">No calculations yet</li>
                 </ul>
             </div>
@@ -337,26 +214,19 @@
 
                 function updateDisplay() {
                     expressionEl.textContent = expression
-                    if (!expression) {
-                        resultEl.textContent = '0'
-                    }
+                    resultEl.textContent = expression
+                        ? resultEl.textContent
+                        : '0'
                 }
 
-                function appendValue(value) {
-                    if (justEvaluated) {
-                        if (/[0-9.]/.test(value)) {
-                            expression = ''
-                        }
-                        justEvaluated = false
-                    }
+                function appendValue(v) {
+                    if (justEvaluated && /[0-9.]/.test(v)) expression = ''
+                    justEvaluated = false
 
-                    const lastChar = expression.slice(-1)
-
-                    if ('+-*/%'.includes(lastChar) && '+-*/%'.includes(value)) {
-                        expression = expression.slice(0, -1) + value
-                    } else {
-                        expression += value
-                    }
+                    const last = expression.slice(-1)
+                    if ('+-*/%'.includes(last) && '+-*/%'.includes(v))
+                        expression = expression.slice(0, -1) + v
+                    else expression += v
 
                     updateDisplay()
                 }
@@ -367,54 +237,34 @@
                     updateDisplay()
                 }
 
-                function backspace() {
-                    if (justEvaluated) {
-                        justEvaluated = false
-                    }
+                function back() {
+                    if (justEvaluated) justEvaluated = false
                     expression = expression.slice(0, -1)
                     updateDisplay()
                 }
 
-                function sanitizeExpression(exp) {
-                    if (!/^[0-9+\-*/%.()\s]+$/.test(exp)) {
-                        return null
-                    }
-                    return exp
-                }
-
-                function evaluate() {
+                function evalExpression() {
                     if (!expression) return
 
-                    const sanitized = sanitizeExpression(expression)
-                    if (!sanitized) {
-                        resultEl.textContent = 'Error'
-                        justEvaluated = true
-                        return
-                    }
-
                     try {
-                        const value = Function('return ' + sanitized)()
-                        if (value === undefined || isNaN(value)) {
+                        const value = Function('return ' + expression)()
+                        const num = Number(value)
+
+                        if (Number.isNaN(num)) {
                             resultEl.textContent = 'Error'
                         } else {
-                            const rounded =
-                                Math.round((value + Number.EPSILON) * 1e10) /
-                                1e10
-                            const displayValue = rounded.toString()
+                            const res =
+                                Math.round((num + Number.EPSILON) * 1e10) / 1e10
+                            resultEl.textContent = res
 
-                            resultEl.textContent = displayValue
-
-                            history.unshift({
-                                exp: expression,
-                                res: displayValue,
-                            })
+                            history.unshift({ exp: expression, res })
                             if (history.length > 10) history.pop()
                             renderHistory()
 
-                            expression = displayValue
-                            justEvaluated = true
+                            expression = String(res)
                         }
-                    } catch (e) {
+                        justEvaluated = true
+                    } catch {
                         resultEl.textContent = 'Error'
                         justEvaluated = true
                     }
@@ -422,112 +272,63 @@
 
                 function renderHistory() {
                     historyList.innerHTML = ''
-                    if (history.length === 0) {
-                        const li = document.createElement('li')
-                        li.className = 'history-empty'
-                        li.textContent = 'No calculations yet'
-                        historyList.appendChild(li)
+                    if (!history.length) {
+                        historyList.innerHTML = `<li class="history-empty">No calculations yet</li>`
                         return
                     }
 
-                    history.forEach((item, index) => {
+                    history.forEach((h, i) => {
                         const li = document.createElement('li')
                         li.className = 'history-item'
-                        li.dataset.index = index
-
-                        const expSpan = document.createElement('span')
-                        expSpan.className = 'history-exp'
-                        expSpan.textContent = item.exp
-
-                        const resSpan = document.createElement('span')
-                        resSpan.className = 'history-res'
-                        resSpan.textContent = item.res
-
-                        li.appendChild(expSpan)
-                        li.appendChild(resSpan)
+                        li.dataset.index = i
+                        li.innerHTML = `<span>${h.exp}</span><span>${h.res}</span>`
                         historyList.appendChild(li)
                     })
                 }
 
-                function clearHistory() {
+                clearHistoryBtn.onclick = () => {
                     history.length = 0
                     renderHistory()
                 }
 
-                calc.addEventListener('click', function (e) {
-                    const btn = e.target.closest('button')
-                    if (!btn) return
+                calc.addEventListener('click', (e) => {
+                    const b = e.target.closest('button')
+                    if (!b) return
+                    const val = b.dataset.value
+                    const act = b.dataset.action
 
-                    const value = btn.getAttribute('data-value')
-                    const action = btn.getAttribute('data-action')
-
-                    if (value !== null) {
-                        appendValue(value)
-                        return
-                    }
-
-                    if (action === 'clear') {
-                        clearAll()
-                    } else if (action === 'backspace') {
-                        backspace()
-                    } else if (action === 'equals') {
-                        evaluate()
-                    }
+                    if (val) appendValue(val)
+                    else if (act === 'clear') clearAll()
+                    else if (act === 'backspace') back()
+                    else if (act === 'equals') evalExpression()
                 })
 
-                document.addEventListener('keydown', function (e) {
-                    const key = e.key
-
-                    if ((key >= '0' && key <= '9') || key === '.') {
-                        appendValue(key)
+                document.addEventListener('keydown', (e) => {
+                    if (/[0-9.]/.test(e.key)) {
+                        appendValue(e.key)
                         e.preventDefault()
-                        return
-                    }
-
-                    if (['+', '-', '*', '/', '%'].includes(key)) {
-                        appendValue(key)
+                    } else if ('+-*/%'.includes(e.key)) {
+                        appendValue(e.key)
                         e.preventDefault()
-                        return
-                    }
-
-                    if (key === 'Enter' || key === '=') {
-                        evaluate()
+                    } else if (e.key === 'Enter') {
+                        evalExpression()
                         e.preventDefault()
-                        return
-                    }
-
-                    if (key === 'Backspace') {
-                        backspace()
+                    } else if (e.key === 'Backspace') {
+                        back()
                         e.preventDefault()
-                        return
-                    }
-
-                    if (key === 'Escape') {
+                    } else if (e.key === 'Escape') {
                         clearAll()
-                        e.preventDefault()
-                        return
-                    }
-
-                    if (key === '(' || key === ')') {
-                        appendValue(key)
                         e.preventDefault()
                     }
                 })
 
-                historyList.addEventListener('click', function (e) {
-                    const item = e.target.closest('.history-item')
-                    if (!item) return
-                    const index = item.dataset.index
-                    const record = history[index]
-                    if (!record) return
-                    expression = record.exp
-                    justEvaluated = false
+                historyList.addEventListener('click', (e) => {
+                    const li = e.target.closest('.history-item')
+                    if (!li) return
+                    const h = history[Number(li.dataset.index)]
+                    expression = h.exp
+                    resultEl.textContent = h.res
                     updateDisplay()
-                    resultEl.textContent = record.res
-                })
-
-                clearHistoryBtn.addEventListener('click', function () {
-                    clearHistory()
                 })
 
                 updateDisplay()
