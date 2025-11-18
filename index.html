@@ -1,1 +1,537 @@
-hello world 1
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Productivity Upgrade Calculator</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                    'Segoe UI', sans-serif;
+            }
+
+            body {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: radial-gradient(
+                    circle at top,
+                    #3b82f6 0,
+                    #020617 50%,
+                    #000 100%
+                );
+                color: #e5e7eb;
+            }
+
+            .calc-wrapper {
+                background: rgba(15, 23, 42, 0.96);
+                border-radius: 18px;
+                padding: 18px;
+                box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7),
+                    0 0 0 1px rgba(148, 163, 184, 0.15);
+                width: 320px;
+                max-width: 100%;
+                backdrop-filter: blur(18px);
+            }
+
+            .calc-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .calc-title {
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: #9ca3af;
+            }
+
+            .chip {
+                font-size: 11px;
+                padding: 2px 8px;
+                border-radius: 999px;
+                background: rgba(55, 65, 81, 0.85);
+                color: #e5e7eb;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .chip-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 999px;
+                background: #22c55e;
+            }
+
+            .display {
+                background: linear-gradient(145deg, #020617, #020617);
+                border-radius: 14px;
+                padding: 10px 10px 12px;
+                margin-bottom: 12px;
+                box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+                overflow: hidden;
+            }
+
+            .display-expression {
+                min-height: 20px;
+                font-size: 13px;
+                color: #6b7280;
+                text-align: right;
+                word-wrap: break-word;
+            }
+
+            .display-value {
+                margin-top: 4px;
+                font-size: 30px;
+                font-weight: 500;
+                text-align: right;
+                color: #f9fafb;
+                word-wrap: break-word;
+            }
+
+            .display-footer {
+                margin-top: 4px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 10px;
+                color: #6b7280;
+            }
+
+            .kbd {
+                border-radius: 4px;
+                border: 1px solid rgba(75, 85, 99, 0.8);
+                padding: 1px 4px;
+                font-size: 10px;
+                font-family: inherit;
+                background: rgba(15, 23, 42, 0.9);
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            button {
+                border: none;
+                border-radius: 13px;
+                padding: 13px 0;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: transform 0.05s ease-out, box-shadow 0.05s ease-out,
+                    background 0.1s ease-out;
+                background: #0f172a;
+                color: #e5e7eb;
+                box-shadow: 0 3px 0 rgba(15, 23, 42, 0.9),
+                    0 0 0 1px rgba(31, 41, 55, 0.8);
+            }
+
+            button:active {
+                transform: translateY(1px);
+                box-shadow: 0 1px 0 rgba(15, 23, 42, 0.9),
+                    0 0 0 1px rgba(31, 41, 55, 0.8);
+            }
+
+            button:focus-visible {
+                outline: 2px solid #3b82f6;
+                outline-offset: 2px;
+            }
+
+            .btn-operator {
+                background: radial-gradient(
+                    circle at top left,
+                    #4b5563,
+                    #111827
+                );
+                color: #facc15;
+            }
+
+            .btn-equals {
+                background: radial-gradient(
+                    circle at top left,
+                    #3b82f6,
+                    #1d4ed8
+                );
+                color: #f9fafb;
+                grid-column: span 2;
+            }
+
+            .btn-ac {
+                background: radial-gradient(
+                    circle at top left,
+                    #ef4444,
+                    #b91c1c
+                );
+                color: #fef2f2;
+            }
+
+            .btn-func {
+                background: radial-gradient(
+                    circle at top left,
+                    #6b7280,
+                    #020617
+                );
+                color: #e5e7eb;
+            }
+
+            .btn-zero {
+                grid-column: span 2;
+            }
+
+            .history {
+                margin-top: 12px;
+                border-top: 1px solid rgba(55, 65, 81, 0.8);
+                padding-top: 8px;
+                max-height: 90px;
+                overflow-y: auto;
+                font-size: 11px;
+                color: #9ca3af;
+            }
+
+            .history-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+
+            .history-list {
+                list-style: none;
+            }
+
+            .history-item {
+                display: flex;
+                justify-content: space-between;
+                gap: 6px;
+                padding: 2px 0;
+                cursor: pointer;
+            }
+
+            .history-item:hover {
+                color: #e5e7eb;
+            }
+
+            .history-exp {
+                opacity: 0.8;
+            }
+
+            .history-res {
+                font-weight: 500;
+            }
+
+            .history-empty {
+                font-style: italic;
+                opacity: 0.7;
+            }
+
+            .history-clear {
+                background: none;
+                border-radius: 999px;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                font-size: 10px;
+                color: #9ca3af;
+                cursor: pointer;
+            }
+
+            .history-clear:hover {
+                text-decoration: underline;
+                transform: none;
+                box-shadow: none;
+            }
+
+            @media (max-width: 360px) {
+                .calc-wrapper {
+                    width: 100%;
+                    margin: 10px;
+                }
+                .display-value {
+                    font-size: 26px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calc-wrapper" id="calculator">
+            <div class="calc-header">
+                <div class="calc-title">CALCULATOR</div>
+                <div class="chip">
+                    <span class="chip-dot"></span>
+                    <span>Productivity upgrade</span>
+                </div>
+            </div>
+
+            <div class="display">
+                <div class="display-expression" id="expression"></div>
+                <div class="display-value" id="result">0</div>
+                <div class="display-footer">
+                    <span>Keyboard friendly</span>
+                    <span>
+                        <span class="kbd">Enter</span> =
+                        <span class="kbd">Esc</span> AC
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid">
+                <button class="btn-ac" data-action="clear">AC</button>
+                <button class="btn-func" data-action="backspace">⌫</button>
+                <button class="btn-func" data-value="%">%</button>
+                <button class="btn-operator" data-value="/">÷</button>
+
+                <button data-value="7">7</button>
+                <button data-value="8">8</button>
+                <button data-value="9">9</button>
+                <button class="btn-operator" data-value="*">×</button>
+
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+                <button class="btn-operator" data-value="-">−</button>
+
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button class="btn-operator" data-value="+">+</button>
+
+                <button class="btn-zero" data-value="0">0</button>
+                <button data-value=".">.</button>
+                <button class="btn-equals" data-action="equals">=</button>
+            </div>
+
+            <div class="history" id="history">
+                <div class="history-header">
+                    <span>History</span>
+                    <button class="history-clear" id="clearHistory">
+                        Clear
+                    </button>
+                </div>
+                <ul class="history-list" id="historyList">
+                    <li class="history-empty">No calculations yet</li>
+                </ul>
+            </div>
+        </div>
+
+        <script>
+            ;(function () {
+                const expressionEl = document.getElementById('expression')
+                const resultEl = document.getElementById('result')
+                const historyList = document.getElementById('historyList')
+                const clearHistoryBtn = document.getElementById('clearHistory')
+                const calc = document.getElementById('calculator')
+
+                let expression = ''
+                let justEvaluated = false
+                const history = []
+
+                function updateDisplay() {
+                    expressionEl.textContent = expression
+                    if (!expression) {
+                        resultEl.textContent = '0'
+                    }
+                }
+
+                function appendValue(value) {
+                    if (justEvaluated) {
+                        if (/[0-9.]/.test(value)) {
+                            expression = ''
+                        }
+                        justEvaluated = false
+                    }
+
+                    const lastChar = expression.slice(-1)
+
+                    if ('+-*/%'.includes(lastChar) && '+-*/%'.includes(value)) {
+                        expression = expression.slice(0, -1) + value
+                    } else {
+                        expression += value
+                    }
+
+                    updateDisplay()
+                }
+
+                function clearAll() {
+                    expression = ''
+                    justEvaluated = false
+                    updateDisplay()
+                }
+
+                function backspace() {
+                    if (justEvaluated) {
+                        justEvaluated = false
+                    }
+                    expression = expression.slice(0, -1)
+                    updateDisplay()
+                }
+
+                function sanitizeExpression(exp) {
+                    if (!/^[0-9+\-*/%.()\s]+$/.test(exp)) {
+                        return null
+                    }
+                    return exp
+                }
+
+                function evaluate() {
+                    if (!expression) return
+
+                    const sanitized = sanitizeExpression(expression)
+                    if (!sanitized) {
+                        resultEl.textContent = 'Error'
+                        justEvaluated = true
+                        return
+                    }
+
+                    try {
+                        const value = Function('return ' + sanitized)()
+                        if (value === undefined || isNaN(value)) {
+                            resultEl.textContent = 'Error'
+                        } else {
+                            const rounded =
+                                Math.round((value + Number.EPSILON) * 1e10) /
+                                1e10
+                            const displayValue = rounded.toString()
+
+                            resultEl.textContent = displayValue
+
+                            history.unshift({
+                                exp: expression,
+                                res: displayValue,
+                            })
+                            if (history.length > 10) history.pop()
+                            renderHistory()
+
+                            expression = displayValue
+                            justEvaluated = true
+                        }
+                    } catch (e) {
+                        resultEl.textContent = 'Error'
+                        justEvaluated = true
+                    }
+                }
+
+                function renderHistory() {
+                    historyList.innerHTML = ''
+                    if (history.length === 0) {
+                        const li = document.createElement('li')
+                        li.className = 'history-empty'
+                        li.textContent = 'No calculations yet'
+                        historyList.appendChild(li)
+                        return
+                    }
+
+                    history.forEach((item, index) => {
+                        const li = document.createElement('li')
+                        li.className = 'history-item'
+                        li.dataset.index = index
+
+                        const expSpan = document.createElement('span')
+                        expSpan.className = 'history-exp'
+                        expSpan.textContent = item.exp
+
+                        const resSpan = document.createElement('span')
+                        resSpan.className = 'history-res'
+                        resSpan.textContent = item.res
+
+                        li.appendChild(expSpan)
+                        li.appendChild(resSpan)
+                        historyList.appendChild(li)
+                    })
+                }
+
+                function clearHistory() {
+                    history.length = 0
+                    renderHistory()
+                }
+
+                calc.addEventListener('click', function (e) {
+                    const btn = e.target.closest('button')
+                    if (!btn) return
+
+                    const value = btn.getAttribute('data-value')
+                    const action = btn.getAttribute('data-action')
+
+                    if (value !== null) {
+                        appendValue(value)
+                        return
+                    }
+
+                    if (action === 'clear') {
+                        clearAll()
+                    } else if (action === 'backspace') {
+                        backspace()
+                    } else if (action === 'equals') {
+                        evaluate()
+                    }
+                })
+
+                document.addEventListener('keydown', function (e) {
+                    const key = e.key
+
+                    if ((key >= '0' && key <= '9') || key === '.') {
+                        appendValue(key)
+                        e.preventDefault()
+                        return
+                    }
+
+                    if (['+', '-', '*', '/', '%'].includes(key)) {
+                        appendValue(key)
+                        e.preventDefault()
+                        return
+                    }
+
+                    if (key === 'Enter' || key === '=') {
+                        evaluate()
+                        e.preventDefault()
+                        return
+                    }
+
+                    if (key === 'Backspace') {
+                        backspace()
+                        e.preventDefault()
+                        return
+                    }
+
+                    if (key === 'Escape') {
+                        clearAll()
+                        e.preventDefault()
+                        return
+                    }
+
+                    if (key === '(' || key === ')') {
+                        appendValue(key)
+                        e.preventDefault()
+                    }
+                })
+
+                historyList.addEventListener('click', function (e) {
+                    const item = e.target.closest('.history-item')
+                    if (!item) return
+                    const index = item.dataset.index
+                    const record = history[index]
+                    if (!record) return
+                    expression = record.exp
+                    justEvaluated = false
+                    updateDisplay()
+                    resultEl.textContent = record.res
+                })
+
+                clearHistoryBtn.addEventListener('click', function () {
+                    clearHistory()
+                })
+
+                updateDisplay()
+            })()
+        </script>
+    </body>
+</html>
